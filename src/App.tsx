@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react"
+import "./App.css"
 
-function App() {
+const SingleRow = ({ rowIdx }: { rowIdx: number }) => {
+  const arr = Array.from(Array(10).keys())
+  if (rowIdx % 2 !== 0) arr.reverse()
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="singleRow">
+      {arr.map((idx) => (
+        <div
+          key={idx}
+          id={`tile-${rowIdx * 10 + idx}`}
+          className={idx % 2 === 0 ? "oddTile" : "evenTile"}
         >
-          Learn React
-        </a>
-      </header>
+          <span className={idx % 2 === 0 ? "oddCount" : "evenCount"}>
+            {rowIdx * 10 + idx + 1}
+          </span>
+        </div>
+      ))}
     </div>
-  );
+  )
 }
 
-export default App;
+const AllRows = () => {
+  return (
+    <>
+      {Array(10)
+        .fill(0)
+        .map((_, rowIdx) => (
+          <SingleRow key={rowIdx} rowIdx={9 - rowIdx} />
+        ))}
+    </>
+  )
+}
+
+const App = () => {
+  return (
+    <div className="App">
+      <div className="gameBoard">
+        <AllRows />
+      </div>
+    </div>
+  )
+}
+
+export default App
