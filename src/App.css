@@ -9,6 +9,7 @@
 
 .gameBoard {
     background-color: #000000;
+    position: relative;
 }
 
 .oddTile {
@@ -51,4 +52,22 @@
 
 .singleRow {
     display: flex;
+}
+
+.dice {
+    margin: 10px;
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 4px;
+}
+
+.playerPiece {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background-color: #000000;
+    border-radius: 20%;
+    bottom: -30px;
+    left: 20px;
+    transition: all 1s;
 }

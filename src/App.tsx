@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useState } from "react"
+import Dice from "react-dice-roll"
 import "./App.css"
 
 const SingleRow = ({ rowIdx }: { rowIdx: number }) => {
@@ -34,10 +35,31 @@ const AllRows = () => {
 }
 
 const App = () => {
+  const [playerPiecePosition, setPlayerPiecePosition] = useState<number>(-1)
+
+  const updatePlayerPiecePosition = (rolledDiceValue: number) => {
+    if (playerPiecePosition === -1 && rolledDiceValue === 6) {
+      setPlayerPiecePosition(0)
+    } else if (
+      playerPiecePosition > -1 &&
+      playerPiecePosition + rolledDiceValue < 100
+    ) {
+      setPlayerPiecePosition((oldPosition) => rolledDiceValue + oldPosition)
+    }
+  }
+
   return (
     <div className="App">
       <div className="gameBoard">
         <AllRows />
+        <div className="playerPiece"></div>
+      </div>
+      <div className="dice">
+        <Dice
+          onRoll={(value) => updatePlayerPiecePosition(value)}
+          size={50}
+          defaultValue={1}
+        />
       </div>
     </div>
   )
