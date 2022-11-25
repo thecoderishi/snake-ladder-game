@@ -7,6 +7,15 @@ const TILE_GAP = 4
 const TILE_SIZE = 60
 const PIECE_SIZE = 24
 
+// Snake head and tail points
+const SNAKES: { [snakeHead: number]: number } = {
+  98: 45,
+  86: 35,
+  63: 59,
+  53: 33,
+  16: 6,
+}
+
 const SingleRow = ({ rowIdx }: { rowIdx: number }) => {
   const arr = Array.from(Array(10).keys())
   if (rowIdx % 2 !== 0) arr.reverse()
@@ -46,6 +55,7 @@ const App = () => {
   const [pieceBottom, setPieceBottom] = useState<number>(22)
   const [gameStatus, setGameStatus] = useState<string>("Not Started")
   const [diceDisabled, setDiceDisabled] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   // Updating the player postion and game status
   const updatePlayerPiecePosition = (rolledDiceValue: number) => {
@@ -62,9 +72,10 @@ const App = () => {
       setPlayerPiecePosition((oldPosition) => rolledDiceValue + oldPosition)
       positionCalculate(rolledDiceValue + playerPiecePosition)
     }
-    if (playerPiecePosition + rolledDiceValue === 100) {
+    if (playerPiecePosition + rolledDiceValue === 99) {
       setGameStatus("Finished!")
       setDiceDisabled(true)
+      setIsDialogOpen(true)
     }
   }
 
@@ -95,6 +106,17 @@ const App = () => {
     setPieceBottom(bottom)
   }
 
+  // Reset game
+  const resetGame = () => {
+    setDiceValue(1)
+    setPlayerPiecePosition(-1)
+    setPieceLeft(-40)
+    setPieceBottom(22)
+    setGameStatus("Not Started")
+    setDiceDisabled(false)
+    setIsDialogOpen(false)
+  }
+
   //   Logging the status of the game
   useEffect(() => {
     if (gameStatus !== "Finished!") {
@@ -109,10 +131,21 @@ const App = () => {
           playerPiecePosition > -1
             ? playerPiecePosition + 1
             : "Outside the board"
-        } 
+        }
         Game Status : ${gameStatus}
       `)
   }, [diceValue, playerPiecePosition, gameStatus, diceDisabled])
+
+  // Handle snake bite
+  useEffect(() => {
+    const snakeTail = SNAKES[playerPiecePosition]
+    if (snakeTail) {
+      setTimeout(() => {
+        setPlayerPiecePosition(snakeTail)
+        positionCalculate(snakeTail)
+      }, 1000)
+    }
+  }, [playerPiecePosition])
 
   return (
     <div className="App">
@@ -132,6 +165,22 @@ const App = () => {
           sound={"/rolling-dice-2-102706.mp3"}
           faceBg={"#45d918"}
         />
+      </div>
+      <div
+        className="dialogBox"
+        style={{ display: isDialogOpen ? "block" : "none" }}
+      >
+        <div className="dialogBoxContent">
+          <p>Game Finished...</p>
+          <div style={{ display: "flex" }}>
+            <button className="button" onClick={() => setIsDialogOpen(false)}>
+              Ok
+            </button>
+            <button className="button" onClick={resetGame}>
+              Reset
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )
