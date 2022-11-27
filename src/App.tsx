@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import Dice from "react-dice-roll"
 import "./App.css"
 
 // Constant values
@@ -53,12 +52,14 @@ const App = () => {
   const [pieceLeft, setPieceLeft] = useState<number>(-40)
   const [pieceBottom, setPieceBottom] = useState<number>(22)
   const [gameStatus, setGameStatus] = useState<string>("Not Started")
-  const [diceDisabled, setDiceDisabled] = useState(false)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [diceDisabled, setDiceDisabled] = useState<boolean>(false)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
   // Roll the dice
   const rollDice = () => {
+    if(diceDisabled) return
     const randomDice = Math.floor(6 * Math.random()) + 1;
+    setDiceDisabled(true)
     setDiceValue(randomDice);
     updatePlayerPiecePosition(randomDice);
   }
@@ -66,7 +67,6 @@ const App = () => {
   // Updating the player postion and game status
   const updatePlayerPiecePosition = (rolledDiceValue: number) => {
     setDiceValue(rolledDiceValue)
-    setDiceDisabled(true)
     if (playerPiecePosition === -1 && rolledDiceValue === 6) {
       setPlayerPiecePosition(0)
       positionCalculate(0)
@@ -126,9 +126,11 @@ const App = () => {
   //   Logging the status of the game
   useEffect(() => {
     if (gameStatus !== "Finished!") {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         setDiceDisabled(false)
       }, 1000)
+      
+      return () => clearTimeout(timeout)
     }
 
     console.log(`
@@ -149,7 +151,7 @@ const App = () => {
       setTimeout(() => {
         setPlayerPiecePosition(snakeTail)
         positionCalculate(snakeTail)
-      }, 500)
+      }, 1000)
     }
   }, [playerPiecePosition])
 
@@ -168,17 +170,13 @@ const App = () => {
           <img className="snake snake-4" src="snake-4.png"/>
         </div>
       </div>
-      <div className="dice">
-        <Dice
-          onRoll={rollDice}
-          size={50}
-          rollingTime={500}
-          defaultValue={1}
-          cheatValue={diceValue}
-          disabled={gameStatus !== 'Not Started' && diceDisabled}
-          sound={"/rolling-dice-2-102706.mp3"}
-          faceBg={"#45d918"}
-        />
+      <div className={`diceContainer ${diceDisabled&&'diceDisabled'}`}>
+      <img
+        className={`dice`}
+        src={`/dice-${diceValue}.png`}
+        alt="die"
+        onClick={rollDice}
+      />
       </div>
       <div
         className="dialogBox"
