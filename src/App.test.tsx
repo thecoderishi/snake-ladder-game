@@ -1,7 +1,6 @@
 import React from "react"
 import { render, screen, fireEvent } from "@testing-library/react"
 import App from "./App"
-import Dice from "react-dice-roll"
 
 test("The board will have total 100 tiles, 50 even tiles and 50 odd tiles", () => {
   const { container } = render(<App />)
@@ -27,6 +26,7 @@ test("Rolling the dice to check if value is updating", async () => {
   render(<App />)
   const diceButton = screen.getByRole("button")
   fireEvent.click(diceButton)
-  await new Promise((r) => setTimeout(r, 1100))
+  expect(diceButton.classList.contains("one")).not.toBe(false)
+  await new Promise((r) => setTimeout(r, 600))
   expect(diceButton.classList.contains("one")).toBe(false)
 })

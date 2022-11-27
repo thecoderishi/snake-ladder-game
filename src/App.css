@@ -68,6 +68,7 @@
     background-color: #000000;
     border-radius: 20%;
     transition: all 1s;
+    z-index: 1;
 }
 
 .dialogBox {
@@ -102,4 +103,33 @@
     background-color: #45d918;
     cursor: pointer;
     font-weight: 700;
+}
+
+.snake {
+    position: absolute;
+}
+
+.snake-1 {
+    left: 90px;
+    top: 20px;
+    height: 430px;
+}
+
+.snake-2 {
+    left: 350px;
+    top: 430px;
+    height: 230px;
+}
+
+.snake-3 {
+    left: 400px;
+    top: 70px;
+    height: 270px;
+}
+
+.snake-4 {
+    left: 10px;
+    top: 370px;
+    height: 160px;
+    transform: rotateZ(-90deg);
 }

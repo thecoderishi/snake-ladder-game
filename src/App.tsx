@@ -9,11 +9,10 @@ const PIECE_SIZE = 24
 
 // Snake head and tail points
 const SNAKES: { [snakeHead: number]: number } = {
-  98: 45,
-  86: 35,
-  63: 59,
-  53: 33,
-  16: 6,
+  98: 35,
+  89: 53,
+  33: 6,
+  40: 22,
 }
 
 const SingleRow = ({ rowIdx }: { rowIdx: number }) => {
@@ -49,13 +48,20 @@ const AllRows = () => {
 }
 
 const App = () => {
-  const [diceValue, setDiceValue] = useState<number>(1)
+  const [diceValue, setDiceValue] = useState<any>(1)
   const [playerPiecePosition, setPlayerPiecePosition] = useState<number>(-1)
   const [pieceLeft, setPieceLeft] = useState<number>(-40)
   const [pieceBottom, setPieceBottom] = useState<number>(22)
   const [gameStatus, setGameStatus] = useState<string>("Not Started")
   const [diceDisabled, setDiceDisabled] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  // Roll the dice
+  const rollDice = () => {
+    const randomDice = Math.floor(6 * Math.random()) + 1;
+    setDiceValue(randomDice);
+    updatePlayerPiecePosition(randomDice);
+  }
 
   // Updating the player postion and game status
   const updatePlayerPiecePosition = (rolledDiceValue: number) => {
@@ -143,7 +149,7 @@ const App = () => {
       setTimeout(() => {
         setPlayerPiecePosition(snakeTail)
         positionCalculate(snakeTail)
-      }, 1000)
+      }, 500)
     }
   }, [playerPiecePosition])
 
@@ -155,13 +161,21 @@ const App = () => {
           className="playerPiece"
           style={{ left: `${pieceLeft}px`, bottom: `${pieceBottom}px` }}
         ></div>
+        <div>
+          <img className="snake snake-1" src="snake-1.png"/>
+          <img className="snake snake-2" src="snake-2.png"/>
+          <img className="snake snake-3" src="snake-3.png"/>
+          <img className="snake snake-4" src="snake-4.png"/>
+        </div>
       </div>
       <div className="dice">
         <Dice
-          onRoll={(value) => updatePlayerPiecePosition(value)}
+          onRoll={rollDice}
           size={50}
+          rollingTime={500}
           defaultValue={1}
-          disabled={diceDisabled}
+          cheatValue={diceValue}
+          disabled={gameStatus !== 'Not Started' && diceDisabled}
           sound={"/rolling-dice-2-102706.mp3"}
           faceBg={"#45d918"}
         />
