@@ -54,11 +54,15 @@ const App = () => {
   const [gameStatus, setGameStatus] = useState<string>("Not Started")
   const [diceDisabled, setDiceDisabled] = useState<boolean>(false)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [isCrookedDice, setIsCrookedDice] = useState<boolean>(false)
 
   // Roll the dice
   const rollDice = () => {
     if (diceDisabled) return
-    const randomDice = Math.floor(6 * Math.random()) + 1
+    let randomDice = Math.floor(6 * Math.random()) + 1
+    if (isCrookedDice&& randomDice%2!==0) {
+      randomDice = randomDice+1
+    }
     setDiceDisabled(true)
     setDiceValue(randomDice)
     updatePlayerPiecePosition(randomDice)
@@ -170,6 +174,17 @@ const App = () => {
           <img className="snake snake-3" src="snake-3.png" alt="snake-3" />
           <img className="snake snake-4" src="snake-4.png" alt="snake-4" />
         </div>
+      </div>
+      <div className="crookedDiceContainer">
+        <input 
+        className="crookedDice" 
+        type="checkbox" 
+        name="crookedDice" 
+        id="crookedDice" 
+        checked={isCrookedDice}
+        onChange={()=>{setIsCrookedDice((prev) => !prev)}}
+        />
+        <p>Crooked Dice</p>
       </div>
       <div className={`diceContainer ${diceDisabled && "diceDisabled"}`}>
         <img
