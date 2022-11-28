@@ -57,11 +57,11 @@ const App = () => {
 
   // Roll the dice
   const rollDice = () => {
-    if(diceDisabled) return
-    const randomDice = Math.floor(6 * Math.random()) + 1;
+    if (diceDisabled) return
+    const randomDice = Math.floor(6 * Math.random()) + 1
     setDiceDisabled(true)
-    setDiceValue(randomDice);
-    updatePlayerPiecePosition(randomDice);
+    setDiceValue(randomDice)
+    updatePlayerPiecePosition(randomDice)
   }
 
   // Updating the player postion and game status
@@ -129,7 +129,7 @@ const App = () => {
       const timeout = setTimeout(() => {
         setDiceDisabled(false)
       }, 1000)
-      
+
       return () => clearTimeout(timeout)
     }
 
@@ -160,23 +160,25 @@ const App = () => {
       <div className="gameBoard">
         <AllRows />
         <div
+          data-testid="playerPiece"
           className="playerPiece"
           style={{ left: `${pieceLeft}px`, bottom: `${pieceBottom}px` }}
         ></div>
         <div>
-          <img className="snake snake-1" src="snake-1.png"/>
-          <img className="snake snake-2" src="snake-2.png"/>
-          <img className="snake snake-3" src="snake-3.png"/>
-          <img className="snake snake-4" src="snake-4.png"/>
+          <img className="snake snake-1" src="snake-1.png" alt="snake-1" />
+          <img className="snake snake-2" src="snake-2.png" alt="snake-2" />
+          <img className="snake snake-3" src="snake-3.png" alt="snake-3" />
+          <img className="snake snake-4" src="snake-4.png" alt="snake-4" />
         </div>
       </div>
-      <div className={`diceContainer ${diceDisabled&&'diceDisabled'}`}>
-      <img
-        className={`dice`}
-        src={`/dice-${diceValue}.png`}
-        alt="die"
-        onClick={rollDice}
-      />
+      <div className={`diceContainer ${diceDisabled && "diceDisabled"}`}>
+        <img
+          data-testid="dice"
+          className={`dice`}
+          src={`/dice-${diceValue}.png`}
+          alt="dice"
+          onClick={rollDice}
+        />
       </div>
       <div
         className="dialogBox"
